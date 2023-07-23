@@ -1,14 +1,74 @@
 import { StatusBar } from 'expo-status-bar';
-import React from 'react';
-import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import React, { useState } from 'react';
+import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Audio } from 'expo-av';
+import { AntDesign } from '@expo/vector-icons'
+
 
 export default function App() {
+
+  const [audio, setAudio] = useState(null);
+  const [songs, setSongs] = useState([
+    {
+      name: 'Sweet child of mine',
+      artist: 'Guns and Roses',
+      playing: false,
+      file: ''
+    },
+    {
+      name: 'Welcome to the jungle',
+      artist: 'Guns and Roses',
+      playing: false,
+      file: ''
+    },
+    {
+      name: 'This love',
+      artist: 'Maroon 5',
+      playing: false,
+      file: ''
+    }
+  ]);
   return (
     <ScrollView style={styles.container}>
       <StatusBar style="auto" hidden />
       <View style={styles.header}>
         <Text style={styles.txtHeader}>Music App</Text>
       </View>
+      <View style={styles.table}>
+        <Text style={styles.txtTable}>Song:</Text>
+        <Text style={styles.txtTable}>Artist:</Text>
+      </View>
+      {
+        songs.map((item) => {
+          if (item.playing){
+            return(
+              <View style={styles.table}>
+                <TouchableOpacity style={styles.rowTable}>
+                  <Text style={styles.txtTableSelected}>
+                    <AntDesign name='play' size={15} color="white"/> {item.name}
+                  </Text>
+                  <Text style={styles.txtTableSelected}>
+                    {item.artist}
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            );
+          } else {
+            return(
+              <View style={styles.table}>
+                <TouchableOpacity style={styles.rowTable}>
+                  <Text style={styles.txtTable}>
+                    <AntDesign name='play' size={15} color="white"/> {item.name}
+                  </Text>
+                  <Text style={styles.txtTable}>
+                    {item.artist}
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            );
+          }
+        })
+      }
     </ScrollView>
   );
 }
@@ -27,5 +87,23 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     color: 'white',
     fontSize: 25
+  },
+  table: {
+    flexDirection: 'row',
+    padding: 20,
+    borderBottomColor: 'white',
+    borderBottomWidth: 1
+  },
+  txtTable: {
+    width: '50%',
+    color: 'rgb(200, 200, 200)'
+  },
+  txtTableSelected: {
+    width: '50%',
+    color: '#1DB954'
+  },
+  rowTable: {
+    width: '100%',
+    flexDirection: 'row'
   }
 });
