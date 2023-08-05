@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import { Audio } from 'expo-av';
 import { AntDesign } from '@expo/vector-icons'
@@ -6,9 +6,21 @@ import { AntDesign } from '@expo/vector-icons'
 
 export default function Player(props) {
 
+    const handleBanckward = async () => {
+        console.log("handeBanckward");
+        let newIndex = props.audioIndex <= 0 ? props.songs.length - 1 : props.audioIndex - 1;
+        await props.changeSong(newIndex);
+    }
 
-    const handePlay = async () => {
-        
+    const handleForward = async () => {
+        console.log("handeForward")
+        let newIndex = props.audioIndex >= props.songs.length - 1 ? 0 : props.audioIndex + 1;
+        await props.changeSong(newIndex);
+    }
+
+    const handlePlay = async () => {
+        console.log("play")
+
         let currentFile = props.songs[props.audioIndex].file; 
 
         const newSongs = props.songs.filter((item, index) => {
@@ -17,44 +29,49 @@ export default function Player(props) {
         })
         
         try{
-            props.setPlaying(true);
-            props.setSongs(newSongs);
-            if (props.audio != null){
-                await props.audio.playAsync();
+            if (props.audio.length != 0){
+                props.audio.filter(async (song) => {
+                    await props.song.playAsync();
+                })
             } else {
                 let currentAudio = new Audio.Sound();
                 await currentAudio.loadAsync(currentFile);
                 await currentAudio.playAsync();
-                props.setAudio(currentAudio);
+                props.setAudio([currentAudio]);
             }
+            props.setPlaying(true);
+            props.setSongs(newSongs);
         }catch(error){}
     }
 
-    const handePause = async () => {
-        if(props.audio != null){
-            props.audio.pauseAsync();
+    const handlePause = async () => {
+        console.log("pause")
+        if(props.audio.length != 0){
+            props.audio.filter((song) => {
+                song.pauseAsync();
+            })
         }
         props.setPlaying(false);
     }
 
     return (
         <View style={styles.player}>
-            <TouchableOpacity style={{marginHorizontal: 20}}>
+            <TouchableOpacity onPress={() => handleBanckward()} style={{marginHorizontal: 20}}>
                 <AntDesign name="banckward" size={35} color="white"/>
             </TouchableOpacity>
 
             {
                 (!props.playing) ? 
-                <TouchableOpacity onPress={() => handePlay()} style={{marginHorizontal: 20}}>
+                <TouchableOpacity onPress={() => handlePlay()} style={{marginHorizontal: 20}}>
                     <AntDesign name="playcircleo" size={35} color="white"/>
                 </TouchableOpacity>
                 :
-                <TouchableOpacity onPress={() => handePause()} style={{marginHorizontal: 20}}>
+                <TouchableOpacity onPress={() => handlePause()} style={{marginHorizontal: 20}}>
                     <AntDesign name="pausecircleo" size={35} color="white"/>
                 </TouchableOpacity>
             }
 
-            <TouchableOpacity style={{marginHorizontal: 20}}>
+            <TouchableOpacity onPress={() => handleForward()} style={{marginHorizontal: 20}}>
                 <AntDesign name="forward" size={35} color="white"/>
             </TouchableOpacity>
         </View>

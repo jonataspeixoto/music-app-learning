@@ -11,7 +11,7 @@ export default function App() {
 
   const [audioIndex, setAudioIndex] = useState(0);
   const [playing, setPlaying] = useState(false);
-  const [audio, setAudio] = useState(null);
+  const [audio, setAudio] = useState([]);
   const [songs, setSongs] = useState([
     {
       name: 'Sweet child of mine',
@@ -24,6 +24,30 @@ export default function App() {
       artist: 'Guns and Roses',
       playing: false,
       file: { uri: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3' }
+    },
+    {
+      name: 'Welcome to the jungle',
+      artist: 'Guns and Roses',
+      playing: false,
+      file: { uri: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-6.mp3' }
+    },
+    {
+      name: 'Welcome to the jungle',
+      artist: 'Guns and Roses',
+      playing: false,
+      file: { uri: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-9.mp3' }
+    },
+    {
+      name: 'Welcome to the jungle',
+      artist: 'Guns and Roses',
+      playing: false,
+      file: { uri: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3' }
+    },
+    {
+      name: 'Welcome to the jungle',
+      artist: 'Guns and Roses',
+      playing: false,
+      file: { uri: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-7.mp3' }
     },
     {
       name: 'This love',
@@ -43,42 +67,6 @@ export default function App() {
       playing: false,
       file: require('./songs/sample4.mp3')
     },
-    {
-      name: 'This love',
-      artist: 'Maroon 5',
-      playing: false,
-      file: require('./songs/sample4.mp3')
-    },
-    {
-      name: 'This love',
-      artist: 'Maroon 5',
-      playing: false,
-      file: require('./songs/sample4.mp3')
-    },
-    {
-      name: 'This love',
-      artist: 'Maroon 5',
-      playing: false,
-      file: require('./songs/sample4.mp3')
-    },
-    {
-      name: 'This love',
-      artist: 'Maroon 5',
-      playing: false,
-      file: require('./songs/sample4.mp3')
-    },
-    {
-      name: 'This love',
-      artist: 'Maroon 5',
-      playing: false,
-      file: require('./songs/sample4.mp3')
-    },
-    {
-      name: 'This love',
-      artist: 'Maroon 5',
-      playing: false,
-      file: require('./songs/sample4.mp3')
-    }
   ]);
 
   const changeSong = async (id) => {
@@ -92,17 +80,20 @@ export default function App() {
 
     let currentAudio = new Audio.Sound();
 
-    if (audio != null){
-      audio.unloadAsync();
+    if (audio.length != 0){
+      audio.filter(async (song) => {
+        await song.pauseAsync();
+        await song.unloadAsync();
+      })
     }
 
     try{
-      setPlaying(true);
       await currentAudio.loadAsync(currentFile);
       await currentAudio.playAsync();
     }catch(error){}
-
-    setAudio(currentAudio);
+    
+    setAudio([currentAudio]);
+    setPlaying(true);
     setSongs(newSongs);
   }
 
@@ -152,7 +143,7 @@ export default function App() {
             }
           })
         }
-        <View style={{paddingBottom: 200}}></View>
+        <View style={{paddingBottom: 100}}></View>
       </ScrollView>
       <Player 
         playing={playing}
@@ -163,6 +154,7 @@ export default function App() {
         setSongs={setSongs}
         audio={audio}
         setAudio={setAudio}
+        changeSong={changeSong}
       >
       </Player>
     </View>
