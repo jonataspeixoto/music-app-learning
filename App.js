@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { Audio } from 'expo-av';
 import { AntDesign } from '@expo/vector-icons'
+import Player from './Player.js'
 
 
 export default function App() {
@@ -25,7 +26,7 @@ export default function App() {
       name: 'This love',
       artist: 'Maroon 5',
       playing: false,
-      file: require('./songs/sample5.mp3')
+      file: require('./songs/sample4.mp3')
     }
   ]);
 
@@ -51,51 +52,55 @@ export default function App() {
   }
 
   return (
-    <ScrollView style={styles.container}>
-      <StatusBar style="auto" hidden />
-      <View style={styles.header}>
-        <Text style={styles.txtHeader}>Music App</Text>
-      </View>
-      <View style={styles.table}>
-        <Text style={styles.txtTable}>Song:</Text>
-        <Text style={styles.txtTable}>Artist:</Text>
-      </View>
-      {
-        songs.map((item, index) => {
-          if (item.playing){
-            return(
-              <View style={styles.table}>
-                <TouchableOpacity 
-                  onPress={() => changeSong(index)}
-                  style={styles.rowTable}>
-                  <Text style={styles.txtTableSelected}>
-                    <AntDesign name='play' size={15} color="#1DB954"/> {item.name}
-                  </Text>
-                  <Text style={styles.txtTableSelected}>
-                    {item.artist}
-                  </Text>
-                </TouchableOpacity>
-              </View>
-            );
-          } else {
-            return(
-              <View style={styles.table}>
-                <TouchableOpacity 
-                  onPress={() => changeSong(index)}
-                  style={styles.rowTable}>
-                  <Text style={styles.txtTable}>
-                    <AntDesign name='play' size={15} color="white"/> {item.name}
-                  </Text>
-                  <Text style={styles.txtTable}>
-                    {item.artist}
-                  </Text>
-                </TouchableOpacity>
-              </View>
-            );
-          }
-        })
-      }
-    </ScrollView>
+    <View style={{flex: 1}}>
+      <ScrollView style={styles.container}>
+        <StatusBar style="auto" hidden />
+        <View style={styles.header}>
+          <Text style={styles.txtHeader}>Music App</Text>
+        </View>
+        <View style={styles.table}>
+          <Text style={styles.txtTable}>Song:</Text>
+          <Text style={styles.txtTable}>Artist:</Text>
+        </View>
+        {
+          songs.map((item, index) => {
+            if (item.playing){
+              return(
+                <View style={styles.table}>
+                  <TouchableOpacity 
+                    onPress={() => changeSong(index)}
+                    style={styles.rowTable}>
+                    <Text style={styles.txtTableSelected}>
+                      <AntDesign name='play' size={15} color="#1DB954"/> {item.name}
+                    </Text>
+                    <Text style={styles.txtTableSelected}>
+                      {item.artist}
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              );
+            } else {
+              return(
+                <View style={styles.table}>
+                  <TouchableOpacity 
+                    onPress={() => changeSong(index)}
+                    style={styles.rowTable}>
+                    <Text style={styles.txtTable}>
+                      <AntDesign name='play' size={15} color="white"/> {item.name}
+                    </Text>
+                    <Text style={styles.txtTable}>
+                      {item.artist}
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              );
+            }
+          })
+        }
+        <View style={{paddingBottom: 200}}></View>
+      </ScrollView>
+      <Player></Player>
+    </View>
   );
 }
 
