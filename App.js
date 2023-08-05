@@ -12,29 +12,41 @@ export default function App() {
     {
       name: 'Sweet child of mine',
       artist: 'Guns and Roses',
-      playing: true,
-      file: ''
+      playing: false,
+      file: require('./songs/sample1.mp3')
     },
     {
       name: 'Welcome to the jungle',
       artist: 'Guns and Roses',
       playing: false,
-      file: ''
+      file: require('./songs/sample2.mp3')
     },
     {
       name: 'This love',
       artist: 'Maroon 5',
       playing: false,
-      file: ''
+      file: require('./songs/sample5.mp3')
     }
   ]);
 
-  const changeSong = (id) => {
-    let newSongs = songs.filter((item, index) => {
-      item.playing = (index == id) ? true : false
-      return item
+  const changeSong = async (id) => {
+    let currentFile = null;
+    const newSongs = songs.filter((item, index) => {
+      item.playing = !(index == id) || !(currentFile = item.file) ? false : true;
+      return item;
     })
 
+    let currentAudio = new Audio.Sound();
+
+    if (audio != null){
+      audio.unloadAsync();
+    }
+    try{
+      await currentAudio.loadAsync(currentFile);
+      await currentAudio.playAsync();
+    }catch(error){}
+
+    setAudio(currentAudio);
     setSongs(newSongs);
   }
 
