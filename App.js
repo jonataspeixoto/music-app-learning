@@ -12,7 +12,7 @@ export default function App() {
     {
       name: 'Sweet child of mine',
       artist: 'Guns and Roses',
-      playing: false,
+      playing: true,
       file: ''
     },
     {
@@ -28,6 +28,16 @@ export default function App() {
       file: ''
     }
   ]);
+
+  const changeSong = (id) => {
+    let newSongs = songs.filter((item, index) => {
+      item.playing = (index == id) ? true : false
+      return item
+    })
+
+    setSongs(newSongs);
+  }
+
   return (
     <ScrollView style={styles.container}>
       <StatusBar style="auto" hidden />
@@ -39,13 +49,15 @@ export default function App() {
         <Text style={styles.txtTable}>Artist:</Text>
       </View>
       {
-        songs.map((item) => {
+        songs.map((item, index) => {
           if (item.playing){
             return(
               <View style={styles.table}>
-                <TouchableOpacity style={styles.rowTable}>
+                <TouchableOpacity 
+                  onPress={() => changeSong(index)}
+                  style={styles.rowTable}>
                   <Text style={styles.txtTableSelected}>
-                    <AntDesign name='play' size={15} color="white"/> {item.name}
+                    <AntDesign name='play' size={15} color="#1DB954"/> {item.name}
                   </Text>
                   <Text style={styles.txtTableSelected}>
                     {item.artist}
@@ -56,7 +68,9 @@ export default function App() {
           } else {
             return(
               <View style={styles.table}>
-                <TouchableOpacity style={styles.rowTable}>
+                <TouchableOpacity 
+                  onPress={() => changeSong(index)}
+                  style={styles.rowTable}>
                   <Text style={styles.txtTable}>
                     <AntDesign name='play' size={15} color="white"/> {item.name}
                   </Text>
