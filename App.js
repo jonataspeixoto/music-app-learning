@@ -1,13 +1,16 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useState } from 'react';
-import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { LogBox, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { Audio } from 'expo-av';
 import { AntDesign } from '@expo/vector-icons'
 import Player from './Player.js'
 
-
 export default function App() {
 
+  LogBox.ignoreAllLogs(true);
+
+  const [audioIndex, setAudioIndex] = useState(0);
+  const [playing, setPlaying] = useState(false);
   const [audio, setAudio] = useState(null);
   const [songs, setSongs] = useState([
     {
@@ -20,7 +23,55 @@ export default function App() {
       name: 'Welcome to the jungle',
       artist: 'Guns and Roses',
       playing: false,
-      file: require('./songs/sample2.mp3')
+      file: { uri: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3' }
+    },
+    {
+      name: 'This love',
+      artist: 'Maroon 5',
+      playing: false,
+      file: { uri: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-5.mp3' }
+    },
+    {
+      name: 'This love',
+      artist: 'Maroon 5',
+      playing: false,
+      file: require('./songs/sample4.mp3')
+    },
+    {
+      name: 'This love',
+      artist: 'Maroon 5',
+      playing: false,
+      file: require('./songs/sample4.mp3')
+    },
+    {
+      name: 'This love',
+      artist: 'Maroon 5',
+      playing: false,
+      file: require('./songs/sample4.mp3')
+    },
+    {
+      name: 'This love',
+      artist: 'Maroon 5',
+      playing: false,
+      file: require('./songs/sample4.mp3')
+    },
+    {
+      name: 'This love',
+      artist: 'Maroon 5',
+      playing: false,
+      file: require('./songs/sample4.mp3')
+    },
+    {
+      name: 'This love',
+      artist: 'Maroon 5',
+      playing: false,
+      file: require('./songs/sample4.mp3')
+    },
+    {
+      name: 'This love',
+      artist: 'Maroon 5',
+      playing: false,
+      file: require('./songs/sample4.mp3')
     },
     {
       name: 'This love',
@@ -37,12 +88,16 @@ export default function App() {
       return item;
     })
 
+    setAudioIndex(id);
+
     let currentAudio = new Audio.Sound();
 
     if (audio != null){
       audio.unloadAsync();
     }
+
     try{
+      setPlaying(true);
       await currentAudio.loadAsync(currentFile);
       await currentAudio.playAsync();
     }catch(error){}
@@ -66,7 +121,7 @@ export default function App() {
           songs.map((item, index) => {
             if (item.playing){
               return(
-                <View style={styles.table}>
+                <View key={index} style={styles.table}>
                   <TouchableOpacity 
                     onPress={() => changeSong(index)}
                     style={styles.rowTable}>
@@ -81,7 +136,7 @@ export default function App() {
               );
             } else {
               return(
-                <View style={styles.table}>
+                <View  key={index} style={styles.table}>
                   <TouchableOpacity 
                     onPress={() => changeSong(index)}
                     style={styles.rowTable}>
@@ -99,7 +154,17 @@ export default function App() {
         }
         <View style={{paddingBottom: 200}}></View>
       </ScrollView>
-      <Player></Player>
+      <Player 
+        playing={playing}
+        setPlaying={setPlaying}
+        audioIndex={audioIndex}
+        setAudioIndex={setAudioIndex}
+        songs={songs}
+        setSongs={setSongs}
+        audio={audio}
+        setAudio={setAudio}
+      >
+      </Player>
     </View>
   );
 }
